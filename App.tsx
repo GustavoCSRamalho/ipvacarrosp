@@ -5,14 +5,17 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  ImageBackground,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -25,74 +28,32 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const [ipva, setIpva] = useState('');
+  const [resultado, setResultado] = useState(''); 
+
+  const calcularIPVA = () => {
+    const tempIpva = parseFloat(ipva);
+    const ipvaValue = 0.04
+    const result = tempIpva * ipvaValue;
+    setResultado(result.toString())
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ImageBackground style={{height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center'}} source={{uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx-D_98dL2lXS8xLEjq46DHru_HYjSQpV2Jw&s'}}>
+      <Text style={{color: '#000', fontSize: 30, fontWeight: 'bold'}}>IPVA 2024 SP</Text>
+      <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', marginTop: 20}}>Calcule o IPVA 2024 do seu carro de passeio</Text>
+
+      <TextInput textAlign='center' onChangeText={(value) => setIpva(value)} placeholder='00000.00' keyboardType='numeric' style={{backgroundColor:"#fff", width: '90%', marginVertical: 10}}/>
+
+      <TouchableOpacity onPress={calcularIPVA}>
+        <Text  style={{color: '#000', fontSize: 30, fontWeight: 'bold'}}>Calcular IPVA</Text>
+      </TouchableOpacity>
+
+      <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', marginTop: 20}}>Valor</Text>
+      <Text style={{color: '#000', fontSize: 30, fontWeight: 'bold'}}>R$ {resultado}</Text>
+    </ImageBackground >
   );
 }
 
